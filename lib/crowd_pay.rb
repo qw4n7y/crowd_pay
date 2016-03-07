@@ -3,7 +3,6 @@ require 'faraday'
 require 'crowd_pay/version'
 
 module CrowdPay
-  autoload :Base,         'crowd_pay/base'
   autoload :Account,      'crowd_pay/account'
   autoload :Asset,        'crowd_pay/asset'
   autoload :Escrow,       'crowd_pay/escrow'

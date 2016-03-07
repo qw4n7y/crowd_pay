@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     crowd_pay (0.0.1)
-      activemodel (~> 4.1.0)
-      faraday (~> 0.9.0)
+      activemodel (~> 4.1)
+      faraday (~> 0.9)
 
 GEM
   remote: https://rubygems.org/
