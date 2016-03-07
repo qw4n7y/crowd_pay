@@ -47,7 +47,7 @@ module CrowdPay
       def create_connection
         @@connection = Faraday.new(:url => domain) do |faraday|
           # faraday.response :logger if Rails.env.develop? || Rails.env.test? # log requests to STDOUT
-          faraday.adapter Faraday.default_adapter  # make requests with Net::HTTP
+          faraday.adapter Faraday.default_adapter
 
           faraday.headers['X-ApiKey'] = api_key
           faraday.headers['X-PortalKey'] = portal_key

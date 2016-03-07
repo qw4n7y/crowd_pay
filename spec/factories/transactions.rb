@@ -11,3 +11,4 @@ FactoryGirl.define do
     t.created_by_ip_address '182.156.77.154'
   end
 end
+

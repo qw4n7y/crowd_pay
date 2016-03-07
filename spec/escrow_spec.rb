@@ -13,7 +13,7 @@ describe CrowdPay::Escrow do
   context ".find" do
     it "find all escrows" do
       stub_request(:get, 'https://test.crowdpay.com/Crowdfunding/api/Escrows')
-      .to_return status: 200, body: fixture(:escrows)
+      .to_return status: 200, body: [FactoryGirl.attributes_for(:escrow)].to_json
       escrow = CrowdPay::Escrow.find.first
       expect(escrow).to be_an(CrowdPay::Escrow)
     end
@@ -23,7 +23,7 @@ describe CrowdPay::Escrow do
     it "find all escrows" do
       escrow_id = "78627"
       stub_request(:get, "https://test.crowdpay.com/Crowdfunding/api/Escrows/#{escrow_id}")
-      .to_return status: 200, body: fixture(:escrow)
+      .to_return status: 200, body: FactoryGirl.attributes_for(:escrow).to_json
       escrow = CrowdPay::Escrow.find(escrow_id)
       expect(escrow).to be_an(CrowdPay::Escrow)
     end
@@ -32,7 +32,9 @@ describe CrowdPay::Escrow do
   context ".find_with_transactions" do
     it "find escrows transactions" do
       escrow_id = "78627"
-      stub_request(:get, "https://test.crowdpay.com/Crowdfunding/api/Escrows/#{escrow_id}/Transactions").to_return status: 200, body: fixture(:escrow_with_transactions)
+      stub_request(:get, "https://test.crowdpay.com/Crowdfunding/api/Escrows/#{escrow_id}/Transactions")
+      .to_return status: 200, body: FactoryGirl.attributes_for(:escrow, :with_transactions).to_json
+
       escrow = CrowdPay::Escrow.find_with_transactions(escrow_id)
       expect(escrow).to be_an(CrowdPay::Escrow)
     end

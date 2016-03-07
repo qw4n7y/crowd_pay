@@ -54,7 +54,7 @@ describe 'CrowdPay::Verification' do
     context 'soft fail' do
       it 'shows that a soft fail has occured' do
         stub_request(:post, url).to_return status: 200,
-          body: fixture(:verification_soft_fail)
+          body: FactoryGirl.attributes_for(:verification, :soft_fail).to_json
 
         verify = CrowdPay::Verification.verify verification_attributes, false
 
