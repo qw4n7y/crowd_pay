@@ -12,6 +12,6 @@ Gem::Specification.new do |gem|
   gem.homepage    = 'https://github.com/qwinix/crowd_pay'
   gem.license     = 'MIT'
 
-  gem.add_runtime_dependency 'activemodel', '4.1.13'
-  gem.add_runtime_dependency 'faraday', '0.9.2'
+  gem.add_runtime_dependency 'activemodel', '~> 4.1.0'
+  gem.add_runtime_dependency 'faraday', '~> 0.9.0'
 end

@@ -2,7 +2,7 @@ module CrowdPay
   class Escrow
     include ActiveModel::AttributeMethods
     include ActiveModel::Validations
-    include CrowdPay::Base
+    include CrowdPay
 
     attr_accessor :id, :issue_number, :portal_issue_number, :offering_type, :minimum_investment_amount, :maximum_investment_amount, :issue_amount, :cash_balance, :principal_balance, :date, :description, :amount, :status, :transactions
 

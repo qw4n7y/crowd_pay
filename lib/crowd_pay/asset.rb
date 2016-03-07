@@ -2,7 +2,7 @@ module CrowdPay
   class Asset
     include ActiveModel::AttributeMethods
     include ActiveModel::Validations
-    include CrowdPay::Base
+    include CrowdPay
 
     register_association :transactions, class_name: "CrowdPay::Transaction"
 

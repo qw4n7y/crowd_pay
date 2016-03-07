@@ -2,7 +2,7 @@ module CrowdPay
   class Verification
     include ActiveModel::AttributeMethods
     include ActiveModel::Validations
-    include CrowdPay::Base
+    include CrowdPay
 
     attr_accessor :id, :firstName, :lastName, :address, :city, :state, :zip,
       :taxpayerId, :birthMonth, :birthDay, :birthYear, :created_by_ip_address,

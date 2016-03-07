@@ -2,7 +2,7 @@ module CrowdPay
   class Transaction
     include ActiveModel::AttributeMethods
     include ActiveModel::Validations
-    include CrowdPay::Base
+    include CrowdPay
 
     attr_accessor :id, :account_id, :asset_id, :date, :reference, :description, :amount, :status, :effective_date, :maturity_date, :cusip_number, :created_by_ip_address
 

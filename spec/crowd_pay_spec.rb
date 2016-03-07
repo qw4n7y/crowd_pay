@@ -4,7 +4,7 @@ require 'socket'
 class DummyClass
   include ActiveModel::AttributeMethods
   include ActiveModel::Validations
-  include CrowdPay::Base
+  include CrowdPay
   attr_accessor :x, :y
   register_association :node_ones, class_name: "NodeOneClass"
   register_association :node_twos, class_name: "NodeTwoClass"
@@ -13,18 +13,18 @@ end
 class NodeOneClass
   include ActiveModel::AttributeMethods
   include ActiveModel::Validations
-  include CrowdPay::Base
+  include CrowdPay
   attr_accessor :a, :b
 end
 
 class NodeTwoClass
   include ActiveModel::AttributeMethods
   include ActiveModel::Validations
-  include CrowdPay::Base
+  include CrowdPay
   attr_accessor :j, :k
 end
 
-RSpec.describe CrowdPay::Base, :type => :lib do
+RSpec.describe CrowdPay, :type => :lib do
 
   context "Test if the Class included CrowdPay methods properly" do
     it "should include crowd pay module" do

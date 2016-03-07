@@ -2,7 +2,7 @@ module CrowdPay
   class Account
     include ActiveModel::AttributeMethods
     include ActiveModel::Validations
-    include CrowdPay::Base
+    include CrowdPay
 
     attr_accessor :id, :number, :portal_account_number, :investor_id,
                   :name_1, :name_2, :name_3, :name_4,
