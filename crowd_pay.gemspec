@@ -13,4 +13,5 @@ Gem::Specification.new do |gem|
   gem.license     = 'MIT'
 
   gem.add_runtime_dependency 'activemodel', '4.1.13'
+  gem.add_runtime_dependency 'faraday', '0.9.2'
 end

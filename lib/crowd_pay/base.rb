@@ -1,3 +1,5 @@
+require 'faraday'
+
 module CrowdPay
   module Base
     module InstanceMethods
@@ -45,14 +47,11 @@ module CrowdPay
       def create_connection
         @@connection = Faraday.new(:url => domain) do |faraday|
           # faraday.response :logger if Rails.env.develop? || Rails.env.test? # log requests to STDOUT
-          faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+          faraday.adapter Faraday.default_adapter  # make requests with Net::HTTP
 
           faraday.headers['X-ApiKey'] = api_key
           faraday.headers['X-PortalKey'] = portal_key
-
-          unless Rails.env.production?
-           faraday.headers['X-ByPassValidation'] = "true"
-          end
+          faraday.headers['X-ByPassValidation'] = by_pass_validation # must be 'true' to enable
         end
       end
 
@@ -87,40 +86,30 @@ module CrowdPay
       end
 
       def get(url)
-        with_response_logging "GET #{url}" do
-          connection.get do |req|
-            req.url(url)
-            req.headers['Content-Type'] = 'application/json'
-          end
+        connection.get do |req|
+          req.url(url)
+          req.headers['Content-Type'] = 'application/json'
         end
       end
 
-      def post(url, data, bypass_validation=false)
+      def post(url, data, cip_by_pass_validation=false)
         data = data.to_json unless data.kind_of? String
 
-        Rails.logger.debug "POST to CrowdPay #{url} with #{data}"
-
-        with_response_logging "POST #{url}" do
-          connection.post do |req|
-            req.url(url)
-            req.headers['Content-Type'] = 'application/json'
-            req.headers['X-CipByPassValidation'] = 'true' if bypass_validation
-            req.body = data
-          end
+        connection.post do |req|
+          req.url(url)
+          req.headers['Content-Type'] = 'application/json'
+          req.headers['X-CipByPassValidation'] = 'true' if cip_by_pass_validation
+          req.body = data
         end
       end
 
       def put(url, data)
         data = data.to_json unless data.kind_of? String
 
-        Rails.logger.debug "PUT to CrowdPay #{url} with #{data}"
-
-        with_response_logging "PUT #{url}" do
-          connection.put do |req|
-            req.url(url)
-            req.headers['Content-Type'] = 'application/json'
-            req.body = data
-          end
+        connection.put do |req|
+          req.url(url)
+          req.headers['Content-Type'] = 'application/json'
+          req.body = data
         end
       end
 
@@ -133,14 +122,6 @@ module CrowdPay
 
       private
 
-      def with_response_logging request
-        response = yield
-
-        Rails.logger.debug "#{request} responded with status: #{response.status} and body: #{response.body}"
-
-        response
-      end
-
       def register_association(assoc_name, details)
         hash = class_variable_get(:@@associations)
         class_variable_set(:@@associations, hash.merge({assoc_name => details.symbolize_keys}.symbolize_keys))
@@ -152,12 +133,14 @@ module CrowdPay
       base.send :include, InstanceMethods
       base.extend ClassMethods
       base.class_eval do
-        cattr_reader :domain, :api_key, :portal_key, :connection, :associations
+        cattr_reader :domain, :api_key, :portal_key, :by_pass_validation,
+          :connection, :associations
 
-        class_variable_set(:@@domain, ENV["crowd_pay_domain"])
-        class_variable_set(:@@api_key, ENV["crowd_pay_api_key"])
-        class_variable_set(:@@portal_key, ENV["crowd_pay_portal_key"])
-        class_variable_set(:@@associations, {})
+        class_variable_set :@@domain, ENV['CROWD_PAY_DOMAIN']
+        class_variable_set :@@api_key, ENV['CROWD_PAY_API_KEY']
+        class_variable_set :@@portal_key, ENV['CROWD_PAY_PORTAL_KEY']
+        class_variable_set :@@by_pass_validation, ENV['CROWD_PAY_BY_PASS_VALIDATION']
+        class_variable_set :@@associations, {}
 
         unless(base.class_variable_get(:@@connection))
           connection = base.create_connection
