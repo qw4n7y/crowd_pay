@@ -1,6 +1,5 @@
 module CrowdPay
   class Transaction
-
     include ActiveModel::AttributeMethods
     include ActiveModel::Validations
     include CrowdPay::Base

@@ -1,4 +1,5 @@
-require 'activerecord'
+require 'active_model'
+require 'crowd_pay/version'
 
 module CrowdPay
   autoload :Base,        'crowd_pay/base'
@@ -8,5 +9,3 @@ module CrowdPay
   autoload :Investor,    'crowd_pay/investor'
   autoload :Transaction, 'crowd_pay/transaction'
 end
-
-require 'crowd_pay/version'
