@@ -77,18 +77,23 @@ module CrowdPay
       obj = self.new
       case status
       when 200, 201
-        attributes = attributes.each_with_object({}) do |(k, v), hash|
-          hash[k.downcase] = v
-        end
-
-        obj.assign_attributes(attributes)
-      when 400, 405, 409, 404
+        build_hash_object obj, attributes
+      when 409
+        build_hash_object obj, attributes['ModelObject']
+      when 400, 405, 404
         #FIX ME: 404 catching is not tested
         obj.populate_errors attributes
       else
-        obj.errors.add(:base, "Unknown Error Status #{status}: crowd_pay.rb#parse method")
+          obj.errors.add(:base, "Unknown Error Status #{status}: crowd_pay.rb#parse method")
       end
       return obj
+    end
+
+    def build_hash_object obj, attributes
+      attributes = attributes.each_with_object({}) do |(k, v), hash|
+        hash[k.downcase] = v
+      end
+      obj.assign_attributes(attributes)
     end
 
     def get(url)

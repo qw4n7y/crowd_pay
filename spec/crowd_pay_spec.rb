@@ -123,11 +123,24 @@ RSpec.describe CrowdPay, :type => :lib do
       expect(dummy.connection.headers["X-PortalKey"]).not_to be_nil
     end
 
-    it "parse" do
+    it "parse with status 201" do
       response = double("response", :status => 201, body: "{\"x\":1,\"y\":2}")
       dummy = DummyClass.parse(response)
       expect(dummy.x).to be(1)
       expect(dummy.y).to be(2)
+    end
+
+    it "parse with status 409" do
+      response = double("response", :status => 409, body: "{\"Code\":\"20000\",\"Message\":\"Investor with same tax id already exists.\",\"Model\":\"Investor\",\"ModelObject\":{\"x\":1,\"y\":2}}")
+      dummy = DummyClass.parse(response)
+      expect(dummy.x).to be(1)
+      expect(dummy.y).to be(2)
+    end
+
+    it "parse with status 400" do
+      response = double("response", :status => 400, body: "{\"Message\":\"The request is invalid.\",\"ModelState\":{\"investor.is_person\":[\"An error has occurred.\"]}}")
+      dummy = DummyClass.parse(response)
+      expect(dummy.errors.messages).not_to be_empty
     end
 
     it "get" do
