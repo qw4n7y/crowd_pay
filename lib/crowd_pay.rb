@@ -59,7 +59,7 @@ module CrowdPay
 
         faraday.headers['X-ApiKey'] = api_key
         faraday.headers['X-PortalKey'] = portal_key
-        faraday.headers['X-ByPassValidation'] = by_pass_validation
+        faraday.headers['X-ByPassValidation'] = by_pass_validation if by_pass_validation
       end
     end
 
