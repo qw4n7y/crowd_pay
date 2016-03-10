@@ -1,5 +1,6 @@
 require 'active_model'
 require 'faraday'
+require 'json'
 require 'crowd_pay/version'
 
 module CrowdPay
