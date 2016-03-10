@@ -1,6 +1,6 @@
 # CrowdPay
 
-[![Gem Version](https://badge.fury.io/rb/qwinix%2Fcrowd_pay.svg)](https://badge.fury.io/rb/qwinix%2Fcrowd_pay)
+[![Gem Version](https://badge.fury.io/rb/crowd_pay.svg)](https://badge.fury.io/rb/crowd_pay)
 [![Build Status](https://travis-ci.org/Qwinix/crowd_pay.svg?branch=master)](https://travis-ci.org/Qwinix/crowd_pay)
 [![Dependency Status](https://gemnasium.com/Qwinix/crowd_pay.svg)](https://gemnasium.com/Qwinix/crowd_pay)
 [![Test Coverage](https://codeclimate.com/github/Qwinix/crowd_pay/badges/coverage.svg)](https://codeclimate.com/github/Qwinix/crowd_pay/coverage)
