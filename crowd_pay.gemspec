@@ -4,8 +4,9 @@ Gem::Specification.new do |gem|
   gem.name        = 'crowd_pay'
   gem.version     = CrowdPay::VERSION
   gem.date        = '2016-02-23'
-  gem.summary     =
-  gem.description = 'CrowdPay.com API wrapper for Ruby'
+  gem.summary     = 'A ruby client for the CrowdPay API using ActiveModel'
+  gem.description = 'A ruby client for CrowdPay\'s API using ActiveModel for easy to use ruby objects.' \
+                    'This gem has been extracted from the Vested.org project courtesy of Calvert Foundation.'
   gem.authors     = ['Kelton Manzanares', 'Prakash Lingaiah', 'Krishnaprasad Varma']
   gem.email       = ['kelton.manzanares@gmail.com', 'plingaiah@qwinix.io', 'kvarma@qwinix.io']
   gem.files       = `git ls-files`.split($\)
