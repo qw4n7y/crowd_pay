@@ -1,3 +1,6 @@
+require 'codeclimate-test-reporter'
+CodeClimate::TestReporter.start
+
 require 'factory_girl'
 require 'webmock/rspec'
 require 'active_support/time'
