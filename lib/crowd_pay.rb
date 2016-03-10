@@ -59,6 +59,7 @@ module CrowdPay
 
         faraday.headers['X-ApiKey'] = api_key
         faraday.headers['X-PortalKey'] = portal_key
+        faraday.headers['X-ByPassValidation'] = by_pass_validation
       end
     end
 
@@ -145,11 +146,12 @@ module CrowdPay
     base.send :include, InstanceMethods
     base.extend ClassMethods
     base.class_eval do
-      cattr_reader :domain, :api_key, :portal_key, :connection, :associations
+      cattr_reader :domain, :api_key, :portal_key, :connection, :associations, :by_pass_validation
 
       class_variable_set :@@domain, ENV['CROWD_PAY_DOMAIN']
       class_variable_set :@@api_key, ENV['CROWD_PAY_API_KEY']
       class_variable_set :@@portal_key, ENV['CROWD_PAY_PORTAL_KEY']
+      class_variable_set :@@by_pass_validation, ENV['CROWD_PAY_BY_PASS']
       class_variable_set :@@associations, {}
 
       unless(base.class_variable_get(:@@connection))
