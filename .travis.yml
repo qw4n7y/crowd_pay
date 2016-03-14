@@ -1,7 +1,6 @@
 sudo: false
 language: ruby
 cache: bundler
-bundler_args: --without development
 rvm:
   - ruby-head
   - ruby
