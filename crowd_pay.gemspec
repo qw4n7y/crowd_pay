@@ -15,4 +15,10 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'activemodel'
   gem.add_runtime_dependency 'faraday', '~> 0.9'
+
+  gem.add_development_dependency 'rspec', '~> 2.14.1'
+  gem.add_development_dependency 'rake' , '~> 10.4.2'
+  gem.add_development_dependency 'factory_girl', '~> 4.2.0'
+  gem.add_development_dependency 'webmock', '~> 1.24.2'
+  gem.add_development_dependency 'codeclimate-test-reporter', '~> 0.5.0'
 end
