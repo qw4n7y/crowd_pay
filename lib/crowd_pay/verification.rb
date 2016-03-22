@@ -5,12 +5,12 @@ module CrowdPay
     include CrowdPay
 
     attr_accessor :id, :firstName, :lastName, :address, :city, :state, :zip,
-      :taxpayerId, :birthMonth, :birthDay, :birthYear, :created_by_ip_address,
-      :message, :key, :questions, :response_body, :request_data, :summary,
-      :qualifiers
+                  :taxpayerId, :birthMonth, :birthDay, :birthYear, :created_by_ip_address,
+                  :message, :key, :questions, :response_body, :request_data, :summary,
+                  :qualifiers
 
     def self.verify(data, bypass_validation)
-      url = "identification/api/v1/ops/verify-identity"
+      url = 'identification/api/v1/ops/verify-identity'
       response = post(url, data, bypass_validation)
       obj = parse(response)
       obj.response_body = response.body
@@ -19,7 +19,7 @@ module CrowdPay
     end
 
     def self.verify_answers(data)
-      url = "identification/api/v1/ops/verify-answers"
+      url = 'identification/api/v1/ops/verify-answers'
       response = post(url, data)
       obj = parse(response)
       obj.response_body = response.body
@@ -28,7 +28,7 @@ module CrowdPay
     end
 
     def pass?
-      self.message.downcase == 'pass' || self.summary.try(:downcase) == 'pass'
+      message.downcase == 'pass' || summary.try(:downcase) == 'pass'
     end
 
     def fail?
@@ -36,7 +36,7 @@ module CrowdPay
     end
 
     def soft_fail?
-      !self.questions.nil?
+      !questions.nil?
     end
   end
 end

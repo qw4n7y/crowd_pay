@@ -15,10 +15,8 @@ module CrowdPay
                   :contact_email, :idology_id, :available_balance,
                   :current_balance, :created_by_ip_address
 
-
-
-    register_association :assets, class_name: "CrowdPay::Asset"
-    register_association :transactions, class_name: "CrowdPay::Transaction"
+    register_association :assets, class_name: 'CrowdPay::Asset'
+    register_association :transactions, class_name: 'CrowdPay::Transaction'
 
     validates_presence_of :investor_id
     validates_presence_of :status_id
@@ -31,24 +29,24 @@ module CrowdPay
     validates_presence_of :draft_account_name
     validates_presence_of :created_by_ip_address
     validates_presence_of :w9_code_id
-    validates_length_of :portal_account_number, :maximum => 30
-    validates_length_of :name_1, :maximum => 50
-    validates_length_of :name_2, :maximum => 50
-    validates_length_of :name_3, :maximum => 50
-    validates_length_of :name_4, :maximum => 50
-    validates_length_of :mailing_address_1, :maximum => 40
-    validates_length_of :mailing_address_2, :maximum => 40
-    validates_length_of :mailing_city, :maximum => 40
-    validates_length_of :mailing_state, :maximum => 30
-    validates_length_of :mailing_zip, :maximum => 9
-    validates_length_of :mailing_country, :maximum => 40
-    validates_length_of :draft_routing_number, :maximum => 9
-    validates_length_of :draft_account_number, :maximum => 17
-    validates_length_of :draft_account_name, :maximum => 50
-    validates_length_of :contact_name, :maximum => 75
-    validates_length_of :contact_phone, :maximum => 20
-    validates_length_of :contact_email, :maximum => 50
-    validates_length_of :created_by_ip_address, :maximum => 25
+    validates_length_of :portal_account_number, maximum: 30
+    validates_length_of :name_1, maximum: 50
+    validates_length_of :name_2, maximum: 50
+    validates_length_of :name_3, maximum: 50
+    validates_length_of :name_4, maximum: 50
+    validates_length_of :mailing_address_1, maximum: 40
+    validates_length_of :mailing_address_2, maximum: 40
+    validates_length_of :mailing_city, maximum: 40
+    validates_length_of :mailing_state, maximum: 30
+    validates_length_of :mailing_zip, maximum: 9
+    validates_length_of :mailing_country, maximum: 40
+    validates_length_of :draft_routing_number, maximum: 9
+    validates_length_of :draft_account_number, maximum: 17
+    validates_length_of :draft_account_name, maximum: 50
+    validates_length_of :contact_name, maximum: 75
+    validates_length_of :contact_phone, maximum: 20
+    validates_length_of :contact_email, maximum: 50
+    validates_length_of :created_by_ip_address, maximum: 25
 
     def self.find(id)
       url = "Crowdfunding/api/Account/#{id}"
@@ -63,7 +61,7 @@ module CrowdPay
     end
 
     def self.create(data)
-      url = "Crowdfunding/api/Account"
+      url = 'Crowdfunding/api/Account'
       response = post(url, data)
       parse(response)
     end

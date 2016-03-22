@@ -12,12 +12,12 @@ module CrowdPay
   autoload :Verification, 'crowd_pay/verification'
 
   module InstanceMethods
-    def initialize(opts={})
+    def initialize(opts = {})
       opts.each do |k, v|
         associations = self.class.class_variable_get(:@@associations)
         assoc_name = k.downcase.to_sym
 
-        if associations.has_key?(assoc_name)
+        if associations.key?(assoc_name)
           klass = associations[assoc_name][:class_name].constantize
 
           association = v.each_with_object([]) do |data, array|
@@ -34,17 +34,17 @@ module CrowdPay
     end
 
     def assign_attributes(hash)
-      self.send :initialize, hash
+      send :initialize, hash
     end
 
-    def populate_errors error
-      self.errors.add(:api, (error.has_key?("Message") ? error["Message"] : error))
-      if error.has_key?("ModelState")
-        model_state = error["ModelState"].symbolize_keys!
+    def populate_errors(error)
+      errors.add(:api, (error.key?('Message') ? error['Message'] : error))
+      if error.key?('ModelState')
+        model_state = error['ModelState'].symbolize_keys!
         model_state.each do |k, v|
           next if k == self.class.name.downcase.to_sym
           v.each do |e|
-            self.errors.add(k.to_s.split(".").last, e)
+            errors.add(k.to_s.split('.').last, e)
           end
         end
       end
@@ -53,13 +53,13 @@ module CrowdPay
 
   module ClassMethods
     def create_connection
-      @@connection = Faraday.new(:url => domain) do |faraday|
-        # faraday.response :logger if Rails.env.develop? || Rails.env.test? # log requests to STDOUT
+      @@connection = Faraday.new(url: domain) do |faraday|
         faraday.adapter Faraday.default_adapter
 
         faraday.headers['X-ApiKey'] = api_key
         faraday.headers['X-PortalKey'] = portal_key
         faraday.headers['X-ByPassValidation'] = by_pass_validation if by_pass_validation
+        faraday.headers['Authorization'] = authorization if authorization
       end
     end
 
@@ -75,23 +75,24 @@ module CrowdPay
       end
     end
 
-    def build_object status, attributes
-      obj = self.new
+    def build_object(status, attributes)
+      obj = new
+
       case status
       when 200, 201
         build_hash_object obj, attributes
       when 409
         build_hash_object obj, attributes['ModelObject']
       when 400, 405, 404
-        #FIX ME: 404 catching is not tested
         obj.populate_errors attributes
       else
-          obj.errors.add(:base, "Unknown Error Status #{status}: crowd_pay.rb#parse method")
+        obj.errors.add(:base, "Unknown Error Status #{status}: crowd_pay.rb#parse method")
       end
-      return obj
+
+      obj
     end
 
-    def build_hash_object obj, attributes
+    def build_hash_object(obj, attributes)
       attributes = attributes.each_with_object({}) do |(k, v), hash|
         hash[k.downcase] = v
       end
@@ -105,8 +106,8 @@ module CrowdPay
       end
     end
 
-    def post(url, data, cip_by_pass_validation=false)
-      data = data.to_json unless data.kind_of? String
+    def post(url, data, cip_by_pass_validation = false)
+      data = data.to_json unless data.is_a? String
 
       connection.post do |req|
         req.url(url)
@@ -117,7 +118,7 @@ module CrowdPay
     end
 
     def put(url, data)
-      data = data.to_json unless data.kind_of? String
+      data = data.to_json unless data.is_a? String
 
       connection.put do |req|
         req.url(url)
@@ -137,7 +138,7 @@ module CrowdPay
 
     def register_association(assoc_name, details)
       hash = class_variable_get(:@@associations)
-      class_variable_set(:@@associations, hash.merge({assoc_name => details.symbolize_keys}.symbolize_keys))
+      class_variable_set(:@@associations, hash.merge({ assoc_name => details.symbolize_keys }.symbolize_keys))
       attr_accessor assoc_name.to_sym
     end
   end
@@ -146,15 +147,17 @@ module CrowdPay
     base.send :include, InstanceMethods
     base.extend ClassMethods
     base.class_eval do
-      cattr_reader :domain, :api_key, :portal_key, :connection, :associations, :by_pass_validation
+      cattr_reader :domain, :api_key, :portal_key, :connection, :associations,
+        :by_pass_validation, :authorization
 
       class_variable_set :@@domain, ENV['CROWD_PAY_DOMAIN']
       class_variable_set :@@api_key, ENV['CROWD_PAY_API_KEY']
       class_variable_set :@@portal_key, ENV['CROWD_PAY_PORTAL_KEY']
       class_variable_set :@@by_pass_validation, ENV['CROWD_PAY_BY_PASS']
+      class_variable_set :@@authorization, ENV['CROWD_PAY_AUTH']
       class_variable_set :@@associations, {}
 
-      unless(base.class_variable_get(:@@connection))
+      unless base.class_variable_get(:@@connection)
         connection = base.create_connection
         base.class_variable_set(:@@connection, connection)
       end

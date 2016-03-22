@@ -4,14 +4,16 @@ module CrowdPay
     include ActiveModel::Validations
     include CrowdPay
 
-    attr_accessor :id, :account_id, :asset_id, :date, :reference, :description, :amount, :status, :effective_date, :maturity_date, :cusip_number, :created_by_ip_address
+    attr_accessor :id, :account_id, :asset_id, :date, :reference, :description,
+                  :amount, :status, :effective_date, :maturity_date, :cusip_number,
+                  :created_by_ip_address
 
     validates_presence_of :account_id
     validates_presence_of :amount
     validates_presence_of :created_by_ip_address
-    validates_length_of :reference, :maximum => 20
-    validates_length_of :description, :maximum => 50
-    validates_length_of :created_by_ip_address, :maximum => 25
+    validates_length_of :reference, maximum: 20
+    validates_length_of :description, maximum: 50
+    validates_length_of :created_by_ip_address, maximum: 25
 
     def self.find(account_id, id)
       url = "Crowdfunding/api/Account/#{account_id}/Transaction/#{id}"

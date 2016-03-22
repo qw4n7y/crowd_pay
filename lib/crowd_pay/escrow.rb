@@ -4,7 +4,10 @@ module CrowdPay
     include ActiveModel::Validations
     include CrowdPay
 
-    attr_accessor :id, :issue_number, :portal_issue_number, :offering_type, :minimum_investment_amount, :maximum_investment_amount, :issue_amount, :cash_balance, :principal_balance, :date, :description, :amount, :status, :transactions
+    attr_accessor :id, :issue_number, :portal_issue_number, :offering_type,
+                  :minimum_investment_amount, :maximum_investment_amount,
+                  :issue_amount, :cash_balance, :principal_balance, :date,
+                  :description, :amount, :status, :transactions
 
     def self.find(id=nil)
       url = 'Crowdfunding/api/Escrows'
