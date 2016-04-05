@@ -34,10 +34,6 @@ RSpec.describe CrowdPay, :type => :lib do
       expect(dummy.respond_to?(:connection)).to be(true)
       expect(dummy.class.respond_to?(:connection)).to be(true)
 
-      expect(dummy.class.respond_to?(:domain)).to be(true)
-      expect(dummy.class.respond_to?(:api_key)).to be(true)
-      expect(dummy.class.respond_to?(:portal_key)).to be(true)
-
       expect(dummy.class.respond_to?(:get)).to be(true)
       expect(dummy.class.respond_to?(:post)).to be(true)
       expect(dummy.class.respond_to?(:put)).to be(true)

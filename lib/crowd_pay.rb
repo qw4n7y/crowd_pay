@@ -11,6 +11,12 @@ module CrowdPay
   autoload :Transaction,  'crowd_pay/transaction'
   autoload :Verification, 'crowd_pay/verification'
 
+  mattr_accessor :domain, :api_key, :portal_key, :by_pass_validation, :authorization
+
+  def self.setup
+    yield self
+  end
+
   module InstanceMethods
     def initialize(opts = {})
       opts.each do |k, v|
@@ -53,13 +59,13 @@ module CrowdPay
 
   module ClassMethods
     def create_connection
-      @@connection = Faraday.new(url: domain) do |faraday|
+      @@connection = Faraday.new(url: CrowdPay.domain) do |faraday|
         faraday.adapter Faraday.default_adapter
 
-        faraday.headers['X-ApiKey'] = api_key
-        faraday.headers['X-PortalKey'] = portal_key
-        faraday.headers['X-ByPassValidation'] = by_pass_validation if by_pass_validation
-        faraday.headers['Authorization'] = authorization if authorization
+        faraday.headers['X-ApiKey'] = CrowdPay.api_key
+        faraday.headers['X-PortalKey'] = CrowdPay.portal_key
+        faraday.headers['X-ByPassValidation'] = CrowdPay.by_pass_validation if CrowdPay.by_pass_validation
+        faraday.headers['Authorization'] = CrowdPay.authorization if CrowdPay.authorization
       end
     end
 
@@ -147,14 +153,7 @@ module CrowdPay
     base.send :include, InstanceMethods
     base.extend ClassMethods
     base.class_eval do
-      cattr_reader :domain, :api_key, :portal_key, :connection, :associations,
-        :by_pass_validation, :authorization
-
-      class_variable_set :@@domain, ENV['CROWD_PAY_DOMAIN']
-      class_variable_set :@@api_key, ENV['CROWD_PAY_API_KEY']
-      class_variable_set :@@portal_key, ENV['CROWD_PAY_PORTAL_KEY']
-      class_variable_set :@@by_pass_validation, ENV['CROWD_PAY_BY_PASS']
-      class_variable_set :@@authorization, ENV['CROWD_PAY_AUTH']
+      cattr_reader :connection, :associations
       class_variable_set :@@associations, {}
 
       unless base.class_variable_get(:@@connection)

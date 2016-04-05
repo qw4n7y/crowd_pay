@@ -16,9 +16,9 @@ module CrowdPay
     register_association :accounts, class_name: 'CrowdPay::Account'
 
     validates_presence_of :tax_id_number
-    validates_presence_of :is_mailing_address_foreign
-    validates_presence_of :is_person
-    validates_presence_of :is_cip_satisfied
+    validates_inclusion_of :is_mailing_address_foreign, :in => [true, false]
+    validates_inclusion_of :is_person, :in => [true, false]
+    validates_inclusion_of :is_cip_satisfied, :in => [true, false]
     validates_presence_of :created_by_ip_address
 
     validates_length_of :tax_id_number, maximum: 9

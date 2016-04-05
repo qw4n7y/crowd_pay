@@ -7,10 +7,11 @@ require 'active_support/time'
 
 require 'crowd_pay'
 
-ENV['CROWD_PAY_DOMAIN'] = 'https://test.crowdpay.com'
-ENV['CROWD_PAY_API_KEY'] = 'test'
-ENV['CROWD_PAY_PORTAL_KEY'] = 'test'
-ENV['CROWD_PAY_BY_PASS'] = 'test'
+CrowdPay.setup do |config|
+  config.domain = 'https://test.crowdpay.com'
+  config.api_key = 'test'
+  config.portal_key = 'test'
+end
 
 WebMock.disable_net_connect!(:allow => "codeclimate.com")
 
