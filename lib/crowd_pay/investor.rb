@@ -13,6 +13,8 @@ module CrowdPay
                   :primary_phone, :secondary_phone, :is_person, :email,
                   :is_cip_satisfied, :portal_investor_number, :created_by_ip_address
 
+    register_association :accounts, class_name: 'CrowdPay::Account'
+
     validates_presence_of :tax_id_number
     validates_presence_of :is_mailing_address_foreign
     validates_presence_of :is_person
