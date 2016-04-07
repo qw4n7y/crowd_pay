@@ -11,10 +11,57 @@ module CrowdPay
   autoload :Transaction,  'crowd_pay/transaction'
   autoload :Verification, 'crowd_pay/verification'
 
-  mattr_accessor :domain, :api_key, :portal_key, :by_pass_validation, :authorization
+  class ConnectionManager
+    class << self
+      attr_accessor :domain, :api_key, :portal_key, :by_pass_validation, :authorization
+    end
+
+    @@connections = {}
+    @@conn_options_by_thread = {}
+
+    def self.connection
+      conn_options = @@conn_options_by_thread[Thread.current.object_id] || {}
+      get_connection_for(conn_options)
+    end
+
+    #  Run the block with the specific connection options passed
+    #
+    def self.with(options)
+      @@conn_options_by_thread[Thread.current.object_id] = options
+      yield if block_given?
+      @@conn_options_by_thread[Thread.current.object_id] = nil
+    end
+
+    private
+
+    def self.get_connection_for(options = {})
+      options = {
+        domain: domain,
+        api_key: api_key,
+        portal_key: portal_key,
+        by_pass_validation: by_pass_validation,
+        authorization: authorization
+      }.merge(options)
+
+      @@connections[options.hash] ||= Faraday.new(url: options[:domain]) do |faraday|
+        faraday.adapter Faraday.default_adapter
+
+        faraday.headers['X-ApiKey'] = options[:api_key]
+        faraday.headers['X-PortalKey'] = options[:portal_key]
+        faraday.headers['X-ByPassValidation'] = options[:by_pass_validation] if options[:by_pass_validation]
+        faraday.headers['Authorization'] = options[:authorization] if options[:authorization]
+      end
+
+      @@connections[options.hash]
+    end
+  end
 
   def self.setup
-    yield self
+    yield ConnectionManager
+  end
+
+  def self.with(options = {}, &block)
+    ConnectionManager.with(options, &block)
   end
 
   module InstanceMethods
@@ -55,19 +102,13 @@ module CrowdPay
         end
       end
     end
+
+    def connection
+      CrowdPay::ConnectionManager.connection
+    end
   end
 
   module ClassMethods
-    def create_connection
-      @@connection = Faraday.new(url: CrowdPay.domain) do |faraday|
-        faraday.adapter Faraday.default_adapter
-
-        faraday.headers['X-ApiKey'] = CrowdPay.api_key
-        faraday.headers['X-PortalKey'] = CrowdPay.portal_key
-        faraday.headers['X-ByPassValidation'] = CrowdPay.by_pass_validation if CrowdPay.by_pass_validation
-        faraday.headers['Authorization'] = CrowdPay.authorization if CrowdPay.authorization
-      end
-    end
 
     def parse(response)
       body = JSON.parse response.body
@@ -103,6 +144,10 @@ module CrowdPay
         hash[k.downcase] = v
       end
       obj.assign_attributes(attributes)
+    end
+
+    def connection
+      CrowdPay::ConnectionManager.connection
     end
 
     def get(url)
@@ -153,13 +198,8 @@ module CrowdPay
     base.send :include, InstanceMethods
     base.extend ClassMethods
     base.class_eval do
-      cattr_reader :connection, :associations
+      cattr_reader :associations
       class_variable_set :@@associations, {}
-
-      unless base.class_variable_get(:@@connection)
-        connection = base.create_connection
-        base.class_variable_set(:@@connection, connection)
-      end
     end
   end
 end

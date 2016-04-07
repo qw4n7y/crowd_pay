@@ -33,6 +33,12 @@ module CrowdPay
       parse(response)
     end
 
+    def self.fund_escrow(data)
+      url = "Crowdfunding/api/Account/#{data[:account_id]}/Transaction/FundEscrow"
+      response = post(url, data)
+      parse(response)
+    end
+
     def self.fund_account(data)
       url = "Crowdfunding/api/Account/#{data[:account_id]}/Transaction/FundAccount"
       response = post(url, data)
