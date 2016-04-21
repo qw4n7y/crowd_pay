@@ -27,9 +27,11 @@ module CrowdPay
     #  Run the block with the specific connection options passed
     #
     def self.with(options)
+      result = nil
       @@conn_options_by_thread[Thread.current.object_id] = options
-      yield if block_given?
+      result = yield if block_given?
       @@conn_options_by_thread[Thread.current.object_id] = nil
+      result
     end
 
     private
