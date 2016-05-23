@@ -55,7 +55,7 @@ module CrowdPay
     end
 
     def self.find_with_transactions(id)
-      url = "Crowdfunding/api/Account/#{id}/Transaction"
+      url = "Crowdfunding/api/Account/#{id}/Transaction/All"
       response = get(url)
       parse(response)
     end
